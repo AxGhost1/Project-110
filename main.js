@@ -1,3 +1,8 @@
+
+the_camera = document.getElementById("camera");
+
+Webcam.attach(the_camera);
+
 Webcam.set({
     width: 350,
     height: 300,
@@ -5,9 +10,6 @@ Webcam.set({
     png_quality: 90
 });  
 
-camera = document.getElementById("camera");
-
-Webcam.attach('#camera');
 
 function take_snapshot() {
     Webcam.snap(function(data_uri) {
@@ -20,6 +22,33 @@ classifier = ml5.imageClassifier('https://teachablemachine.withgoogle.com/models
 
 function modelLoaded() {
     console.log("Model Loaded!");
+}
+
+function check() {
+    img = document.getElementById('captured_image');
+    classifier.classify(img, gotResult);
+}
+function gotResult(error, results) {
+    if(error){
+        console.error(error);
+    } else {
+        console.log(results);
+        document.getElementById("result_gesture_name").innerHTML = results[0].label;
+        prediction = results[0].label;
+        speak();
+        if(results[0].label == "Nice") {
+            document.getElementById("update_emoji").innerHTML = "&#128076;"
+        }
+        if(results[0].label == "Good") {
+            document.getElementById("update_emoji").innerHTML = "&#128077;"
+        }
+        if(results[0].label == "Victory") {
+            document.getElementById("update_emoji").innerHTML = "&#9996;"
+        }
+        if(results[0].label == "Dislike") {
+            document.getElementById("update_emoji").innerHTML = "&#128078;"
+        }
+    }
 }
 
 function speak() {
